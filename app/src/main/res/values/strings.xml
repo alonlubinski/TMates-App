@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">TMates</string>
+    <string name="lookforpartner_str">Look For Partner</string>
+    <string name="wheretoplay_str">Where To Play?</string>
+    <string name="login_str">Login</string>
+    <string name="signup_str">Sign Up</string>
+    <string name="email_str">Email</string>
+    <string name="password_str">Password</string>
+    <string name="welcome_str">Welcome!</string>
+    <string name="male_str">Male</string>
+    <string name="female_str">Female</string>
+    <string name="tays_str">Tell about yourself:</string>
+    <string name="continue_str">Continue</string>
+    <string name="title_activity_where_to_play">Map</string>
+    <string-array name="sports_array">
+        <item>Select Sport</item>
+        <item>Soccer</item>
+        <item>Basketball</item>
+        <item>Running</item>
+        <item>Baseball</item>
+        <item>Volleyball</item>
+        <item>Walking</item>
+        <item>Football</item>
+        <item>Tennis</item>
+    </string-array>
+</resources>
