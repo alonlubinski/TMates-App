@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,7 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.regex.Pattern;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText emailEdit, passwordEdit;
     private Button loginBtn, signupBtn;
     private FirebaseAuth mAuth;
@@ -62,22 +63,8 @@ public class LoginActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                email = emailEdit.getText().toString();
-                password = passwordEdit.getText().toString();
-                signIn(email, password);
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        });
-
-        signupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startSignUpActivity();
-            }
-        });
+        loginBtn.setOnClickListener(this);
+        signupBtn.setOnClickListener(this);
     }
 
 
@@ -105,6 +92,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signIn(final String email, final String password){
         if(checkFormValidation(email, password)) {
+            progressBar.setVisibility(View.VISIBLE);
+            loginBtn.setClickable(false);
+            signupBtn.setClickable(false);
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -138,6 +128,9 @@ public class LoginActivity extends AppCompatActivity {
 
                             } else {
                                 // If sign in fails, display a message to the user.
+                                progressBar.setVisibility(View.INVISIBLE);
+                                loginBtn.setClickable(true);
+                                signupBtn.setClickable(true);
                                 Toast.makeText(LoginActivity.this,"Login failed!", Toast.LENGTH_LONG).show();
 
                             }
@@ -151,12 +144,15 @@ public class LoginActivity extends AppCompatActivity {
         if(!pattern.matcher(email).matches() && password.length() < 6){
             emailEdit.setError("Wrong email pattern");
             passwordEdit.setError("Password must contain 6 characters");
+            progressBar.setVisibility(View.INVISIBLE);
             return false;
         } else if(!pattern.matcher(email).matches()){
             emailEdit.setError("Wrong email pattern");
+            progressBar.setVisibility(View.INVISIBLE);
             return false;
         } else if(password.length() < 6){
             passwordEdit.setError("Password must contain 6 characters");
+            progressBar.setVisibility(View.INVISIBLE);
             return false;
         }
         return true;
@@ -165,11 +161,28 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        loginBtn.setClickable(true);
+        signupBtn.setClickable(true);
         progressBar.setVisibility(View.GONE);
         saveLogin = sharedPreferences.getBoolean("saveLogin", false);
         if(saveLogin == false){
             emailEdit.setText("");
             passwordEdit.setText("");
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+            case R.id.loginBtn:
+                email = emailEdit.getText().toString();
+                password = passwordEdit.getText().toString();
+                signIn(email, password);
+                break;
+
+            case R.id.signupBtn:
+                startSignUpActivity();
+                break;
         }
     }
 }

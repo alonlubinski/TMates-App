@@ -2,23 +2,18 @@ package com.example.tmates;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText, passwordEditText2;
@@ -53,7 +48,6 @@ public class SignUpActivity extends AppCompatActivity {
                 password2 = passwordEditText2.getText().toString();
                 if(checkFormValidation(password, password2)){
                         signUp(email, password);
-                        progressBar.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -64,6 +58,8 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        signupBtn.setClickable(false);
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             //FirebaseUser user = mAuth.getCurrentUser();
@@ -71,8 +67,8 @@ public class SignUpActivity extends AppCompatActivity {
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
-
                             progressBar.setVisibility(View.GONE);
+                            signupBtn.setClickable(true);
                             Toast.makeText(SignUpActivity.this,task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -86,4 +82,11 @@ public class SignUpActivity extends AppCompatActivity {
         }
         return true;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        signupBtn.setClickable(true);
+    }
+
 }

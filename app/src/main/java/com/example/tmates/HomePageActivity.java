@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class HomePageActivity extends AppCompatActivity {
-    private Button profileBtn, whereToPlayBtn;
+    private ImageButton profileBtn, chatsBtn, lookForPartnerBtn, whereToPlayBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,12 +17,26 @@ public class HomePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
 
         profileBtn = findViewById(R.id.profileBtn);
+        chatsBtn = findViewById(R.id.chatListBtn);
+        lookForPartnerBtn = findViewById(R.id.lookForPartnerBtn);
         whereToPlayBtn = findViewById(R.id.whereToPlayBtn);
 
         profileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startProfilePageActivity();
+            }
+        });
+        chatsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startChatListActivity();
+            }
+        });
+        lookForPartnerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startLookForPartnerActivity();
             }
         });
         whereToPlayBtn.setOnClickListener(new View.OnClickListener() {
@@ -37,8 +52,18 @@ public class HomePageActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void startChatListActivity(){
+        Intent intent = new Intent(this, ChatListActivity.class);
+        startActivity(intent);
+    }
+
     public void startWhereToPlayActivity(){
         Intent intent = new Intent(HomePageActivity.this, WhereToPlayActivity.class);
+        startActivity(intent);
+    }
+
+    public void startLookForPartnerActivity(){
+        Intent intent = new Intent(this, LookForPartnerActivity.class);
         startActivity(intent);
     }
 }

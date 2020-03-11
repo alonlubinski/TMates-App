@@ -1,16 +1,19 @@
 package com.example.tmates;
 
-import android.provider.ContactsContract;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class User {
     private String uid, name, gender, city, description, email;
     private int age;
-    private ArrayList<String> sportsArray;
+    private HashMap<String, String> sportsMap;
+    private ArrayList<String> chatRoomArrayList;
+
 
     // Constructor.
-    public User(String uid, String email, String name, String gender, String description, int age, String city, ArrayList<String> sportsArray){
+    public User(String uid, String email, String name, String gender, String description, int age, String city, HashMap<String, String> sportsMap, ArrayList<String> chatRoomArrayList){
         this.uid = uid;
         this.email = email;
         this.name = name;
@@ -18,7 +21,8 @@ public class User {
         this.description = description;
         this.age = age;
         this.city = city;
-        this.sportsArray = sportsArray;
+        this.sportsMap = sportsMap;
+        this.chatRoomArrayList = chatRoomArrayList;
     }
 
     public User(){
@@ -82,12 +86,20 @@ public class User {
         this.city = city;
     }
 
-    public ArrayList<String> getSportsArray(){
-        return this.sportsArray;
+    public HashMap<String, String> getSportsMap(){
+        return this.sportsMap;
     }
 
-    public void setSportsArray(ArrayList<String> sportsArray){
-        this.sportsArray = sportsArray;
+    public void setSportsMap(HashMap<String, String> sportsMap){
+        this.sportsMap = sportsMap;
+    }
+
+    public ArrayList<String> getChatRoomArrayList() {
+        return chatRoomArrayList;
+    }
+
+    public void setChatRoomArrayList(ArrayList<String> chatRoomArrayList) {
+        this.chatRoomArrayList = chatRoomArrayList;
     }
 
 }

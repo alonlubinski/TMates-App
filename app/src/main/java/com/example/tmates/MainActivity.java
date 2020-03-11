@@ -1,7 +1,6 @@
 package com.example.tmates;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;

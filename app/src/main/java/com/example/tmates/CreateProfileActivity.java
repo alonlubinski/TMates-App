@@ -1,49 +1,62 @@
 package com.example.tmates;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.example.tmates.R.id.maleCheckBox;
+import static com.example.tmates.R.id.userDescription;
+import static com.example.tmates.R.id.welcomeStr;
 
 public class CreateProfileActivity extends AppCompatActivity implements View.OnClickListener{
     private String name, gender, city, description;
     private int age;
     private AppCompatCheckBox maleCheckBox, femaleCheckBox;
     private EditText nameEditText, ageEditText, cityEditText, descriptionEditText;
-    private Button continueBtn;
+    private Button uploadImageBtn, continueBtn;
     private ArrayList<String> sportsArray = new ArrayList<>();
-    private String[] sportsOptions = {"Soccer", "Basketball", "Football", "Volleyball", "Baseball", "Running", "Tennis", "TRX"};
+    private LinkedHashMap<String, String> sportsMap = new LinkedHashMap<>();
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private TableLayout tableLayout;
-    private TableRow soccerRow, basketballRow, footballRow, volleyballRow, baseballRow, runningRow, tennisRow;
-    private ArrayList<TableRow> tableRowsArray = new ArrayList<>();
-
+    private StorageReference mStorageRef;
+    private Uri filePath;
+    private ImageView userImage;
+    private LinearLayout basketballLayout, soccerLayout, tennisLayout, footballLayout, volleyballLayout, runningLayout, baseballLayout;
+    private ArrayList<LinearLayout> layoutsArray = new ArrayList<>();
+    private Boolean editProfile = false;
+    private TextView welcomeStr;
+    private CheckBox basketballCheckBox, soccerCheckBox, tennisCheckBox, footballCheckBox, volleyballCheckBox, runningCheckBox, baseballCheckBox;
+    private Spinner basketballSpinner, soccerSpinner, tennisSpinner, footballSpinner, volleyballSpinner, runningSpinner, baseballSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,22 +66,35 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        if(getIntent().getExtras() != null){
+            editProfile = true;
+        }
 
         findById();
+        initLayoutArray();
+        initSpinners();
         setClickListeners();
+
+        if(editProfile){
+            welcomeStr.setText(R.string.editprofile_str);
+            getUserInfo();
+            continueBtn.setText(R.string.save_str);
+        }
 
     }
 
     public boolean checkFormValidation(){
-            if(nameEditText.getText().toString().length() == 0){
+            if(nameEditText.getText().toString().trim().length() == 0){
                 nameEditText.setError("Please enter name.");
                 return false;
             }
-            if(ageEditText.getText().toString().length() == 0){
+            if(ageEditText.getText().toString().trim().length() == 0){
                 ageEditText.setError("Please enter age.");
                 return false;
             }
-            if(cityEditText.getText().toString().length() == 0){
+            if(cityEditText.getText().toString().trim().length() == 0){
                 cityEditText.setError("Please enter city");
                 return false;
             }
@@ -103,69 +129,236 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
                     city = cityEditText.getText().toString();
                     description = descriptionEditText.getText().toString();
                     sportsArray.clear();
-                    for(int i = 0; i < tableRowsArray.size(); i++){
-                        if(((ColorDrawable)tableRowsArray.get(i).getBackground()).getColor() == Color.GREEN){
-                            sportsArray.add(((TextView)tableRowsArray.get(i).getChildAt(0)).getText().toString());
+                    sportsMap.clear();
+                    for(int i = 0 ; i < layoutsArray.size(); i++){
+                        if(((CheckBox)layoutsArray.get(i).getChildAt(0)).isChecked()){
+                            sportsMap.put(((CheckBox)layoutsArray.get(i).getChildAt(0)).getText().toString(), ((Spinner)layoutsArray.get(i).getChildAt(1)).getSelectedItem().toString());
+
                         }
                     }
-                    User newUser = new User(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getEmail(), name, gender, description, age, city, sportsArray);
+                    User newUser = new User(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getEmail(), name, gender, description, age, city, sportsMap, new ArrayList<String>());
                     db.collection("users").document(mAuth.getCurrentUser().getUid()).set(newUser);
-                    startHomePageActivity();
+                    String userId = mAuth.getCurrentUser().getUid();
+                    StorageReference userImage = mStorageRef.child("users_images/" + userId);
+                    if(filePath != null){
+                        userImage.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            }
+                        });
+                    }
+                    if(editProfile){
+                        finish();
+                    } else{
+                        startHomePageActivity();
+                    }
                 }
                 break;
 
+            case R.id.uploadImageBtn:
+                chooseImage();
+                break;
+
             default:
-                if(((ColorDrawable)view.getBackground()).getColor() == Color.GREEN){
-                    view.setBackgroundColor(Color.TRANSPARENT);
+                if(((CheckBox)view).isChecked()){
+                    ((LinearLayout)view.getParent()).getChildAt(1).setVisibility(View.VISIBLE);
                 } else {
-                    view.setBackgroundColor(Color.GREEN);
+                    ((LinearLayout)view.getParent()).getChildAt(1).setVisibility(View.INVISIBLE);
                 }
         }
-
     }
 
     public void findById(){
+        welcomeStr = findViewById(R.id.welcomeStr);
         nameEditText = findViewById(R.id.nameEditText);
         ageEditText = findViewById(R.id.ageEditText);
         maleCheckBox = findViewById(R.id.maleCheckBox);
         femaleCheckBox = findViewById(R.id.femaleCheckBox);
         cityEditText = findViewById(R.id.cityEditText);
         descriptionEditText = findViewById(R.id.descriptionEditText);
+        uploadImageBtn = findViewById(R.id.uploadImageBtn);
         continueBtn = findViewById(R.id.continueBtn);
-        tableLayout = findViewById(R.id.sportsSelectTable);
-        soccerRow = findViewById(R.id.soccerRow);
-        basketballRow = findViewById(R.id.basketballRow);
-        footballRow = findViewById(R.id.footballRow);
-        volleyballRow = findViewById(R.id.volleyballRow);
-        baseballRow = findViewById(R.id.baseballRow);
-        runningRow = findViewById(R.id.runningRow);
-        tennisRow = findViewById(R.id.tennisRow);
+        userImage = findViewById(R.id.userImage);
+        basketballLayout = findViewById(R.id.basketballLayout);
+        soccerLayout = findViewById(R.id.soccerLayout);
+        tennisLayout = findViewById(R.id.tennisLayout);
+        footballLayout = findViewById(R.id.footballLayout);
+        volleyballLayout = findViewById(R.id.volleyballLayout);
+        runningLayout = findViewById(R.id.runningLayout);
+        baseballLayout = findViewById(R.id.baseballLayout);
+        basketballCheckBox = findViewById(R.id.basketballCheckBox);
+        soccerCheckBox = findViewById(R.id.soccerCheckBox);
+        tennisCheckBox = findViewById(R.id.tennisCheckBox);
+        footballCheckBox = findViewById(R.id.footballCheckBox);
+        volleyballCheckBox = findViewById(R.id.volleyballCheckBox);
+        runningCheckBox = findViewById(R.id.runningCheckBox);
+        baseballCheckBox = findViewById(R.id.baseballCheckBox);
+        basketballSpinner = findViewById(R.id.basketballSpinner);
+        soccerSpinner = findViewById(R.id.soccerSpinner);
+        tennisSpinner = findViewById(R.id.tennisSpinner);
+        footballSpinner = findViewById(R.id.footballSpinner);
+        volleyballSpinner = findViewById(R.id.volleyballSpinner);
+        runningSpinner = findViewById(R.id.runningSpinner);
+        baseballSpinner = findViewById(R.id.baseballSpinner);
+    }
+
+    public void initLayoutArray(){
+        layoutsArray.add(basketballLayout);
+        layoutsArray.add(soccerLayout);
+        layoutsArray.add(tennisLayout);
+        layoutsArray.add(footballLayout);
+        layoutsArray.add(volleyballLayout);
+        layoutsArray.add(runningLayout);
+        layoutsArray.add(baseballLayout);
+    }
+
+    public void initSpinners(){
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.exp_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        for(int i = 0; i < layoutsArray.size(); i++){
+            ((Spinner)layoutsArray.get(i).getChildAt(1)).setAdapter(adapter);
+        }
     }
 
     public void setClickListeners(){
         maleCheckBox.setOnClickListener(this);
         femaleCheckBox.setOnClickListener(this);
+        uploadImageBtn.setOnClickListener(this);
         continueBtn.setOnClickListener(this);
-        soccerRow.setOnClickListener(this);
-        basketballRow.setOnClickListener(this);
-        footballRow.setOnClickListener(this);
-        volleyballRow.setOnClickListener(this);
-        baseballRow.setOnClickListener(this);
-        runningRow.setOnClickListener(this);
-        tennisRow.setOnClickListener(this);
-
-        tableRowsArray.add(soccerRow);
-        tableRowsArray.add(basketballRow);
-        tableRowsArray.add(footballRow);
-        tableRowsArray.add(volleyballRow);
-        tableRowsArray.add(baseballRow);
-        tableRowsArray.add(runningRow);
-        tableRowsArray.add(tennisRow);
+        for(int i = 0; i < layoutsArray.size(); i++){
+            layoutsArray.get(i).getChildAt(0).setOnClickListener(this);
+        }
     }
 
     public void startHomePageActivity(){
         Intent intent = new Intent(this, HomePageActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_PICK);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 71);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 71 && resultCode == RESULT_OK && data != null && data.getData() != null ) {
+            filePath = data.getData();
+            Glide.with(getApplicationContext()).load(filePath).into(userImage);
+        }
+    }
+
+    private void getUserInfo() {
+        DocumentReference documentReference = db.collection("users").document(mAuth.getCurrentUser().getUid());
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if(documentSnapshot.exists()){
+                        User user = documentSnapshot.toObject(User.class);
+                        nameEditText.setText("" + user.getName());
+                        ageEditText.setText("" + user.getAge());
+                        if(user.getGender().compareTo("Male") == 0){
+                            maleCheckBox.setChecked(true);
+                            femaleCheckBox.setChecked(false);
+                        } else {
+                            femaleCheckBox.setChecked(true);
+                            maleCheckBox.setChecked(false);
+                        }
+                        cityEditText.setText("" + user.getCity());
+                        descriptionEditText.setText("" + user.getDescription());
+                        try {
+                            getProfileImage(mAuth.getCurrentUser().getUid());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(!user.getSportsMap().isEmpty()){
+                            for(int i=0; i < user.getSportsMap().size(); i++){
+                                sportsMap.put(new ArrayList<String>(user.getSportsMap().keySet()).get(i), new ArrayList<String>(user.getSportsMap().values()).get(i));
+                            }
+                            markCheckBox(sportsMap);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void markCheckBox(Map<String, String> sportsMap){
+        ArrayList<String> expArr = new ArrayList<>();
+        String exp;
+        expArr.add("Beginner");
+        expArr.add("Amateur");
+        expArr.add("Professional");
+        if(sportsMap.containsKey("Basketball")){
+            basketballCheckBox.setChecked(true);
+            basketballSpinner.setVisibility(View.VISIBLE);
+            exp = sportsMap.get("Basketball");
+            basketballSpinner.setSelection(expArr.indexOf(exp));
+        }
+        if(sportsMap.containsKey("Soccer")){
+            soccerCheckBox.setChecked(true);
+            soccerSpinner.setVisibility(View.VISIBLE);
+            exp = sportsMap.get("Soccer");
+            soccerSpinner.setSelection(expArr.indexOf(exp));
+        }
+        if(sportsMap.containsKey("Tennis")){
+            tennisCheckBox.setChecked(true);
+            tennisSpinner.setVisibility(View.VISIBLE);
+            exp = sportsMap.get("Tennis");
+            tennisSpinner.setSelection(expArr.indexOf(exp));
+        }
+        if(sportsMap.containsKey("Football")){
+            footballCheckBox.setChecked(true);
+            footballSpinner.setVisibility(View.VISIBLE);
+            exp = sportsMap.get("Foottball");
+            footballSpinner.setSelection(expArr.indexOf(exp));
+        }
+        if(sportsMap.containsKey("Volleyball")){
+            volleyballCheckBox.setChecked(true);
+            volleyballSpinner.setVisibility(View.VISIBLE);
+            exp = sportsMap.get("volleyball");
+            volleyballSpinner.setSelection(expArr.indexOf(exp));
+        }
+        if(sportsMap.containsKey("Running")){
+            runningCheckBox.setChecked(true);
+            runningSpinner.setVisibility(View.VISIBLE);
+            exp = sportsMap.get("Running");
+            runningSpinner.setSelection(expArr.indexOf(exp));
+        }
+        if(sportsMap.containsKey("Baseball")){
+            baseballCheckBox.setChecked(true);
+            baseballSpinner.setVisibility(View.VISIBLE);
+            exp = sportsMap.get("Baseball");
+            baseballSpinner.setSelection(expArr.indexOf(exp));
+        }
+    }
+
+    private void getProfileImage(String id) throws IOException {
+        String prefix = id;
+        final File localFile = File.createTempFile(prefix, "");
+        StorageReference userImageRef = mStorageRef.child("users_images/" + prefix);
+        userImageRef.getFile(localFile)
+                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        // Successfully downloaded data to local file
+                        Glide.with(getApplicationContext()).load(localFile).into(userImage);
+                        filePath = Uri.parse(localFile.getPath());
+                       // Picasso.with(getApplicationContext()).load(localFile).into(userImage);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle failed download
+            }
+        });
     }
 }
