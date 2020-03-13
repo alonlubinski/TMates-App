@@ -2,8 +2,13 @@ package com.example.tmates;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -19,101 +24,80 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.annotation.Nullable;
 
-public class LookForPartnerActivity extends AppCompatActivity implements View.OnClickListener{
-    private ArrayList<Post> postsList = new ArrayList<>();
-    private Button addPostBtn;
+public class MessageListActivity extends AppCompatActivity {
+    private ArrayList<Message> messageList = new ArrayList<>();
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private TextView noPostsYetStr;
+    private TextView noMessageYetStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_look_for_partner);
+        setContentView(R.layout.activity_message_list);
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        noMessageYetStr = findViewById(R.id.noMessageYetStr);
 
 
-        noPostsYetStr = findViewById(R.id.noPostYetStr);
-        addPostBtn = findViewById(R.id.addPostBtn);
-        addPostBtn.setOnClickListener(this);
-
-        //getDataFromFireBase();
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.addPostBtn:
-                startAddPostActivity();
-                break;
-
-            default:
-                System.out.println();
-        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        CollectionReference postRef = db.collection("posts");
-        postRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        CollectionReference colRef = db.collection("messages");
+        colRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                postsList.clear();
+                messageList.clear();
                 getDataFromFireBase();
             }
         });
     }
 
-    public void startAddPostActivity(){
-        Intent intent = new Intent(this, AddPostActivity.class);
-        startActivity(intent);
-    }
-
     public void initRecyclerView(){
-        recyclerView = findViewById(R.id.postsRecyclerView);
+        recyclerView = findViewById(R.id.messagesRecyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new MyAdapter(postsList);
+        mAdapter = new MessageListAdapter(messageList);
         recyclerView.setAdapter(mAdapter);
     }
-//
+
     public void getDataFromFireBase(){
-        final CollectionReference collectionReference = db.collection("posts");
+        final CollectionReference collectionReference = db.collection("messages");
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot document : task.getResult()){
-                        Post post = document.toObject(Post.class);
-                        postsList.add(post);
+                        Message message = document.toObject(Message.class);
+                        if(message.getReceiverId().compareTo(mAuth.getCurrentUser().getUid()) == 0){
+                            messageList.add(message);
+                        }
                     }
-                    Collections.sort(postsList);
-                    if(!postsList.isEmpty()){
-                       noPostsYetStr.setVisibility(View.INVISIBLE);
-                       initRecyclerView();
+                    Collections.sort(messageList);
+                    if(!messageList.isEmpty()){
+                        noMessageYetStr.setVisibility(View.INVISIBLE);
+                        initRecyclerView();
                     } else {
-                        noPostsYetStr.setVisibility(View.VISIBLE);
+                        noMessageYetStr.setVisibility(View.VISIBLE);
                     }
-
                 }
             }
         });
     }
 
+
 }
-
-

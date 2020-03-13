@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 public class HomePageActivity extends AppCompatActivity {
-    private ImageButton profileBtn, chatsBtn, lookForPartnerBtn, whereToPlayBtn;
+    private ImageButton profileBtn, messagesBtn, lookForPartnerBtn, whereToPlayBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +17,7 @@ public class HomePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
 
         profileBtn = findViewById(R.id.profileBtn);
-        chatsBtn = findViewById(R.id.chatListBtn);
+        messagesBtn = findViewById(R.id.messageListBtn);
         lookForPartnerBtn = findViewById(R.id.lookForPartnerBtn);
         whereToPlayBtn = findViewById(R.id.whereToPlayBtn);
 
@@ -27,10 +27,10 @@ public class HomePageActivity extends AppCompatActivity {
                 startProfilePageActivity();
             }
         });
-        chatsBtn.setOnClickListener(new View.OnClickListener() {
+        messagesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startChatListActivity();
+                startMessageListActivity();
             }
         });
         lookForPartnerBtn.setOnClickListener(new View.OnClickListener() {
@@ -52,8 +52,8 @@ public class HomePageActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void startChatListActivity(){
-        Intent intent = new Intent(this, ChatListActivity.class);
+    public void startMessageListActivity(){
+        Intent intent = new Intent(this, MessageListActivity.class);
         startActivity(intent);
     }
 

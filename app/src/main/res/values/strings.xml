@@ -42,6 +42,20 @@
     <string name="gender_str">Gender</string>
     <string name="save_str">Save</string>
     <string name="chats_str">Chats</string>
+    <string name="message_str">Message</string>
+    <string name="messagetitle_str">Message Title:</string>
+    <string name="entermessagetitle_str">Enter your message title</string>
+    <string name="messagedescription_str">Message Description:</string>
+    <string name="entermessagedescription_str">Enter your message description</string>
+    <string name="contactinfo_str">Contact Information:</string>
+    <string name="phonenum_str">Phone Number:</string>
+    <string name="entermessageemail_str">Enter your email</string>
+    <string name="entermessagephone_str">Enter your phone number</string>
+    <string name="fill_str">Fill at least one of the options below.</string>
+    <string name="messages_str">Messages</string>
+    <string name="nomessages_str">No messages yet...</string>
+    <string name="delete_str">Delete</string>
+    <string name="noposts_str">No posts yet...</string>
     <string-array name="sports_array">
         <item>Select Sport</item>
         <item>Soccer</item>

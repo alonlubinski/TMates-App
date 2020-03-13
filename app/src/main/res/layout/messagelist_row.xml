@@ -15,12 +15,12 @@
         android:layout_height="match_parent"
         android:padding="5dp">
         <LinearLayout
-            android:id="@+id/cardHeadLayout"
+            android:id="@+id/messageCardHeadLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
-                android:id="@+id/cardUserImage"
+                android:id="@+id/messageCardUserImage"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"/>
@@ -30,7 +30,7 @@
                 android:layout_weight="3"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/postTitleTextView"
+                    android:id="@+id/messageTitleTextView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
@@ -43,13 +43,13 @@
                     android:layout_weight="1.5"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/postAuthorTextView"
+                        android:id="@+id/messageAuthorTextView"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
                         android:gravity="left"/>
                     <TextView
-                        android:id="@+id/postDateTextView"
+                        android:id="@+id/messageDateTextView"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="3"
@@ -61,39 +61,56 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/cardBodyLayout"
+            android:id="@+id/messageCardBodyLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/cardHeadLayout"
+            android:layout_below="@id/messageCardHeadLayout"
             android:padding="5dp">
             <TextView
-                android:id="@+id/postDescriptionTextView"
+                android:id="@+id/messageDescriptionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"/>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/cardBottomLayout"
+            android:id="@+id/messageCardInfoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/messageCardBodyLayout"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/messageCardEmailTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/messageCardPhoneTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/messageCardBottomLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/cardBodyLayout"
+            android:layout_below="@id/messageCardInfoLayout"
             android:padding="5dp">
             <Button
-                android:id="@+id/cardProfileBtn"
+                android:id="@+id/messageCardProfileBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/profile_str"
                 android:background="@drawable/signup_button"/>
             <Button
-                android:id="@+id/cardContactBtn"
+                android:id="@+id/messageCardDeleteBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/message_str"
+                android:text="@string/delete_str"
                 android:background="@drawable/login_button"
                 android:layout_marginLeft="5dp"/>
 

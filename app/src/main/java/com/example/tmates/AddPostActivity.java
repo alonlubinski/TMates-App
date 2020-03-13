@@ -89,10 +89,10 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public boolean checkFormValidation(EditText postTitleEditText, EditText postDescriptionEditText){
-        if(postTitleEditText.getText().toString().length() == 0){
+        if(postTitleEditText.getText().toString().trim().length() == 0){
             Toast.makeText(AddPostActivity.this,"Please enter post title.", Toast.LENGTH_LONG).show();
             return false;
-        } else if(postDescriptionEditText.getText().toString().length() == 0){
+        } else if(postDescriptionEditText.getText().toString().trim().length() == 0){
             Toast.makeText(AddPostActivity.this,"Please enter post description.", Toast.LENGTH_LONG).show();
             return false;
         }

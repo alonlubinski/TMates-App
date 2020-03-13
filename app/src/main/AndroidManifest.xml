@@ -17,8 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ChatRoomActivity"></activity>
-        <activity android:name=".ChatListActivity" />
+        <activity android:name=".MessageListActivity"></activity>
+        <activity android:name=".SendMessageActivity" />
         <activity android:name=".AddPostActivity" />
         <activity android:name=".LookForPartnerActivity" />
         <activity android:name=".ProfilePageActivity" />
