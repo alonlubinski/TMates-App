@@ -66,4 +66,6 @@ public class HomePageActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LookForPartnerActivity.class);
         startActivity(intent);
     }
+
+
 }

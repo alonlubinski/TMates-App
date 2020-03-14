@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class SendMessageActivity extends AppCompatActivity implements View.OnClickListener {
-    private User otherUser;
+    private User curUser;
     private String otherUserId;
     private EditText messageTitleEditText, messageDescriptionEditText, messageEmailEditText, messagePhoneEditText;
     private Button confirmMessageBtn, cancelMessageBtn;
@@ -42,7 +42,7 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
         findById();
         if(getIntent().getExtras() != null){
             otherUserId = getIntent().getExtras().getString("otherUserId");
-            getOtherUser(otherUserId);
+            getCurUser(mAuth.getCurrentUser().getUid());
         }
         confirmMessageBtn.setOnClickListener(this);
         cancelMessageBtn.setOnClickListener(this);
@@ -77,7 +77,7 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
         return true;
     }
 
-    public void getOtherUser(String id){
+    public void getCurUser(String id){
         DocumentReference documentReference = db.collection("users").document(id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -85,7 +85,7 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     if (documentSnapshot.exists()) {
-                        otherUser = documentSnapshot.toObject(User.class);
+                        curUser = documentSnapshot.toObject(User.class);
                     }
                 }
             }
@@ -105,14 +105,14 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
                     String messageId = messagesRef.document().getId();
                     if(messageEmailEditText.getText().toString().trim().length() == 0){
                         String phone = messagePhoneEditText.getText().toString();
-                        newMessage = new Message(otherUser, messageId, mAuth.getCurrentUser().getUid(), otherUserId, title, description, date, phone);
+                        newMessage = new Message(curUser, messageId, mAuth.getCurrentUser().getUid(), otherUserId, title, description, date, phone);
                     } else if(messagePhoneEditText.getText().toString().trim().length() == 0){
                         String email = messageEmailEditText.getText().toString();
-                        newMessage = new Message(otherUser, messageId, mAuth.getCurrentUser().getUid(), otherUserId, title, description, date, email);
+                        newMessage = new Message(curUser, messageId, mAuth.getCurrentUser().getUid(), otherUserId, title, description, date, email);
                     } else {
                         String email = messageEmailEditText.getText().toString();
                         String phone = messagePhoneEditText.getText().toString();
-                        newMessage = new Message(otherUser, messageId, mAuth.getCurrentUser().getUid(), otherUserId, title, description, date, email, phone);
+                        newMessage = new Message(curUser, messageId, mAuth.getCurrentUser().getUid(), otherUserId, title, description, date, email, phone);
                     }
                     db.collection("messages").document(messageId).set(newMessage);
                     Toast.makeText(SendMessageActivity.this,"Message sent.", Toast.LENGTH_LONG).show();

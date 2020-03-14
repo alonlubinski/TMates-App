@@ -21,9 +21,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -148,6 +151,8 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
                         });
                     }
                     if(editProfile){
+                        //updatePostsDB(userId, newUser);
+                        //updateMessagesDB(userId, newUser);
                         finish();
                     } else{
                         startHomePageActivity();
@@ -166,6 +171,42 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
                     ((LinearLayout)view.getParent()).getChildAt(1).setVisibility(View.INVISIBLE);
                 }
         }
+    }
+
+    private void updatePostsDB(final String authorId, final User user) {
+        CollectionReference postsRef = db.collection("posts");
+        postsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()){
+                        Post post = document.toObject(Post.class);
+                        if(post.getAuthorId().compareTo(authorId) == 0){
+                            post.setAuthor(user);
+                            db.collection("posts").document(post.getPostId()).set(post);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void updateMessagesDB(final String authorId, final User user) {
+        CollectionReference postsRef = db.collection("messages");
+        postsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()){
+                        Message message = document.toObject(Message.class);
+                        if(message.getSenderId().compareTo(authorId) == 0){
+                            message.setAuthor(user);
+                            db.collection("posts").document(message.getMessageId()).set(message);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void findById(){

@@ -60,8 +60,12 @@ public class MessageListActivity extends AppCompatActivity {
         colRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(recyclerView != null){
+                    recyclerView.removeAllViewsInLayout();
+                }
                 messageList.clear();
                 getDataFromFireBase();
+
             }
         });
     }

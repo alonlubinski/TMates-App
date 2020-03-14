@@ -71,6 +71,9 @@ public class LookForPartnerActivity extends AppCompatActivity implements View.On
         postRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(recyclerView != null){
+                    recyclerView.removeAllViewsInLayout();
+                }
                 postsList.clear();
                 getDataFromFireBase();
             }
