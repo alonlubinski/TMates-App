@@ -28,7 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColorHint="@color/white">
+            android:textColorHint="@color/white"
+            app:hintEnabled="false">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editEmail"
                 android:layout_width="match_parent"
@@ -40,7 +41,7 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textColorHighlight="@color/white"
-                android:textCursorDrawable="@color/white"/>
+                android:textCursorDrawable="@color/white" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -48,7 +49,9 @@
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true"
             app:passwordToggleTint="@color/white"
-            android:textColorHint="@color/white">
+            android:textColorHint="@color/white"
+            app:hintEnabled="false"
+            android:layout_marginTop="15dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editPassword"
                 android:layout_width="match_parent"
@@ -111,7 +114,7 @@
         android:progressDrawable="@xml/circular_progress_bar"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:theme="@style/AppTheme.WhiteAccent"/>
+        android:theme="@style/AppTheme.BlackAccent"/>
 
 
 </RelativeLayout>

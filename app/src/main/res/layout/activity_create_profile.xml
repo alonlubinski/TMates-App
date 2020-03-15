@@ -157,9 +157,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="@string/basketball_str"
+                    android:textSize="15sp"
                     android:textColor="@color/white"
-                    android:buttonTint="@color/white"
-                    android:drawableLeft="@drawable/ic_edit"/>
+                    android:buttonTint="@color/white"/>
                 <Spinner
                     android:id="@+id/basketballSpinner"
                     android:layout_width="0dp"

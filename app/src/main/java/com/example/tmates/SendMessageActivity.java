@@ -8,6 +8,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,6 +30,7 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private Handler handler = new Handler();
+    private ProgressBar sendMessageProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
         messagePhoneEditText = findViewById(R.id.messagePhoneEditText);
         confirmMessageBtn = findViewById(R.id.confirmMessageBtn);
         cancelMessageBtn = findViewById(R.id.cancelMessageBtn);
+        sendMessageProgressBar = findViewById(R.id.sendMessageProgressBar);
     }
 
     public boolean checkFormValidation(EditText messageTitleEditText, EditText messageDescriptionEditText, EditText messageEmailEditText, EditText messagePhoneEditText){
@@ -96,6 +99,9 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.confirmMessageBtn:
+                sendMessageProgressBar.setVisibility(View.VISIBLE);
+                confirmMessageBtn.setClickable(false);
+                cancelMessageBtn.setClickable(false);
                 if(checkFormValidation(messageTitleEditText, messageDescriptionEditText, messageEmailEditText, messagePhoneEditText)){
                     Message newMessage;
                     String title = messageTitleEditText.getText().toString();
@@ -122,12 +128,26 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
                             finish();
                         }
                     }, 2000);
+                } else {
+                    confirmMessageBtn.setClickable(true);
+                    cancelMessageBtn.setClickable(true);
+                    sendMessageProgressBar.setVisibility(View.GONE);
                 }
                 break;
 
             case R.id.cancelMessageBtn:
+                confirmMessageBtn.setClickable(false);
+                cancelMessageBtn.setClickable(false);
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        confirmMessageBtn.setClickable(true);
+        cancelMessageBtn.setClickable(true);
+        sendMessageProgressBar.setVisibility(View.GONE);
     }
 }

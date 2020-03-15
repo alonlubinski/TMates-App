@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,7 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseFirestore db;
     private User user;
     private Handler handler = new Handler();
+    private ProgressBar addPostProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
         postDescriptionEditText = findViewById(R.id.postDescriptionEditText);
         confirmPostBtn = findViewById(R.id.confirmPostBtn);
         cancelPostBtn = findViewById(R.id.cancelPostBtn);
+        addPostProgressBar = findViewById(R.id.addPostProgressBar);
 
         confirmPostBtn.setOnClickListener(this);
         cancelPostBtn.setOnClickListener(this);
@@ -66,6 +69,9 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.confirmPostBtn:
+                addPostProgressBar.setVisibility(View.VISIBLE);
+                confirmPostBtn.setClickable(false);
+                cancelPostBtn.setClickable(false);
                 if(checkFormValidation(postTitleEditText, postDescriptionEditText)){
                     String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
                     CollectionReference postsRef = db.collection("posts");
@@ -79,10 +85,16 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
                             finish();
                         }
                     }, 2000);
+                } else {
+                    confirmPostBtn.setClickable(true);
+                    cancelPostBtn.setClickable(true);
+                    addPostProgressBar.setVisibility(View.GONE);
                 }
                 break;
 
             case R.id.cancelPostBtn:
+                confirmPostBtn.setClickable(false);
+                cancelPostBtn.setClickable(false);
                 finish();
                 break;
         }
@@ -97,5 +109,13 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        confirmPostBtn.setClickable(true);
+        cancelPostBtn.setClickable(true);
+        addPostProgressBar.setVisibility(View.GONE);
     }
 }

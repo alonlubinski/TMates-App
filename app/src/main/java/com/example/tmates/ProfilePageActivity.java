@@ -3,7 +3,9 @@ package com.example.tmates;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -76,18 +78,25 @@ public class ProfilePageActivity extends AppCompatActivity implements View.OnCli
         TextView sport = new TextView(tableRow.getContext());
         sport.setText("Sports");
         sport.setPadding(30, 30, 30, 30);
-        sport.setTextSize(20);
-        sport.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-        sport.setTextColor(getResources().getColor(R.color.white));
+        sport.setTextSize(30);
+        sport.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2));
+        sport.setTextColor(getResources().getColor(R.color.black));
+        sport.setGravity(Gravity.CENTER);
+        sport.setTypeface(Typeface.DEFAULT_BOLD);
+
         TextView exp = new TextView(getApplicationContext());
         exp.setText("Experience");
         exp.setPadding(30, 30, 30, 30);
-        exp.setTextSize(20);
+        exp.setTextSize(30);
+        exp.setTypeface(Typeface.DEFAULT_BOLD);
         exp.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2));
-        exp.setTextColor(getResources().getColor(R.color.white));
+        exp.setTextColor(getResources().getColor(R.color.black));
+        exp.setGravity(Gravity.CENTER);
         tableRow.addView(sport);
         tableRow.addView(exp);
+        tableRow.setBackground(getResources().getDrawable(R.drawable.tablerow_shape));
         sportTable.addView(tableRow);
+
         updateUI();
     }
 
@@ -120,14 +129,17 @@ public class ProfilePageActivity extends AppCompatActivity implements View.OnCli
                                 sport.setTextSize(20);
                                 sport.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
                                 sport.setTextColor(getResources().getColor(R.color.white));
+                                sport.setGravity(Gravity.CENTER);
                                 TextView exp = new TextView(getApplicationContext());
                                 exp.setText(new ArrayList<String>(user.getSportsMap().values()).get(i));
                                 exp.setPadding(30, 30, 30, 30);
                                 exp.setTextSize(20);
-                                exp.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2));
+                                exp.setLayoutParams(new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
                                 exp.setTextColor(getResources().getColor(R.color.white));
+                                exp.setGravity(Gravity.CENTER);
                                 tableRow.addView(sport);
                                 tableRow.addView(exp);
+                                tableRow.setBackground(getResources().getDrawable(R.drawable.tablerow_shape));
                                 sportTable.addView(tableRow);
                             }
                         }

@@ -79,15 +79,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/messageCardBodyLayout"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
             <TextView
                 android:id="@+id/messageCardEmailTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_email"
+                android:drawablePadding="5dp"
+                android:padding="5dp"
+                android:layout_marginBottom="5dp"/>
             <TextView
                 android:id="@+id/messageCardPhoneTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_phone"
+                android:drawablePadding="5dp"
+                android:padding="5dp"/>
 
         </LinearLayout>
 
@@ -104,14 +112,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/profile_str"
-                android:background="@drawable/signup_button"/>
+                android:background="@drawable/login_button"/>
             <Button
                 android:id="@+id/messageCardDeleteBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/delete_str"
-                android:background="@drawable/login_button"
+                android:background="@drawable/signup_button"
                 android:layout_marginLeft="5dp"/>
 
         </LinearLayout>

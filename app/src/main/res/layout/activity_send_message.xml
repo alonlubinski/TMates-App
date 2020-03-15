@@ -26,7 +26,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/white"
-            android:layout_below="@id/messageTitleStr">
+            android:layout_below="@id/messageTitleStr"
+            app:hintEnabled="false"
+            android:layout_marginTop="5dp">
             <EditText
                 android:id="@+id/messageTitleEditText"
                 android:layout_width="match_parent"
@@ -58,7 +60,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColorHint="@color/white"
-            android:layout_below="@id/messageDescriptionStr">
+            android:layout_below="@id/messageDescriptionStr"
+            app:hintEnabled="false"
+            android:layout_marginTop="5dp">
             <EditText
                 android:id="@+id/messageDescriptionEditText"
                 android:layout_width="match_parent"
@@ -106,7 +110,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/white"
-                android:layout_below="@id/messageTitleStr">
+                android:layout_below="@id/messageTitleStr"
+                app:hintEnabled="false"
+                android:layout_marginTop="5dp">
                 <EditText
                     android:id="@+id/messageEmailEditText"
                     android:layout_width="match_parent"
@@ -135,7 +141,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/white"
-                android:layout_below="@id/messageTitleStr">
+                android:layout_below="@id/messageTitleStr"
+                app:hintEnabled="false"
+                android:layout_marginTop="5dp">
                 <EditText
                     android:id="@+id/messagePhoneEditText"
                     android:layout_width="match_parent"
@@ -184,5 +192,15 @@
                 android:layout_marginTop="0dp"/>
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/sendMessageProgressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:progressDrawable="@xml/circular_progress_bar"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:theme="@style/AppTheme.WhiteAccent"/>
     </RelativeLayout>
 </ScrollView>

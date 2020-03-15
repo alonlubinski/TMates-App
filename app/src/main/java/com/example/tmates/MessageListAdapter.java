@@ -2,6 +2,7 @@ package com.example.tmates;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +10,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -103,8 +98,16 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         holder.messageAuthorTextView.setText(mDataset.get(position).getAuthor().getName());
         holder.messageDateTextView.setText(mDataset.get(position).getMessageDate());
         holder.messageDescriptionTextView.setText(mDataset.get(position).getMessageText());
-        holder.messageEmailTextView.setText(mDataset.get(position).getEmail());
-        holder.messagePhoneTextView.setText(mDataset.get(position).getPhone());
+        if(TextUtils.isEmpty(mDataset.get(position).getEmail())){
+            holder.messageEmailTextView.setVisibility(View.GONE);
+        }else {
+            holder.messageEmailTextView.setText(mDataset.get(position).getEmail());
+        }
+        if(TextUtils.isEmpty(mDataset.get(position).getPhone())){
+            holder.messagePhoneTextView.setVisibility(View.GONE);
+        } else{
+            holder.messagePhoneTextView.setText(mDataset.get(position).getPhone());
+        }
         holder.userAuthorId = mDataset.get(position).getSenderId();
         holder.messageId = mDataset.get(position).getMessageId();
         try {
