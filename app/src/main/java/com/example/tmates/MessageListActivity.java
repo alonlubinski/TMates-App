@@ -2,7 +2,6 @@ package com.example.tmates;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
@@ -60,6 +59,7 @@ public class MessageListActivity extends AppCompatActivity {
         });
     }
 
+    // Method that init the recycler view.
     public void initRecyclerView(){
         recyclerView = findViewById(R.id.messagesRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -69,6 +69,7 @@ public class MessageListActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
     }
 
+    // Method that get information from the firebase.
     public void getDataFromFireBase(){
         final CollectionReference collectionReference = db.collection("messages");
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

@@ -88,6 +88,7 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    // Method that check the create profile form.
     public boolean checkFormValidation(){
             if(nameEditText.getText().toString().trim().length() == 0){
                 nameEditText.setError("Please enter name.");
@@ -136,10 +137,9 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
                     for(int i = 0 ; i < layoutsArray.size(); i++){
                         if(((CheckBox)layoutsArray.get(i).getChildAt(0)).isChecked()){
                             sportsMap.put(((CheckBox)layoutsArray.get(i).getChildAt(0)).getText().toString(), ((Spinner)layoutsArray.get(i).getChildAt(1)).getSelectedItem().toString());
-
                         }
                     }
-                    User newUser = new User(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getEmail(), name, gender, description, age, city, sportsMap, new ArrayList<String>());
+                    User newUser = new User(mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getEmail(), name, gender, description, age, city, sportsMap);
                     db.collection("users").document(mAuth.getCurrentUser().getUid()).set(newUser);
                     String userId = mAuth.getCurrentUser().getUid();
                     StorageReference userImage = mStorageRef.child("users_images/" + userId);
@@ -209,7 +209,8 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         });
     }
 
-    public void findById(){
+    // Find views by id method.
+    private void findById(){
         welcomeStr = findViewById(R.id.welcomeStr);
         nameEditText = findViewById(R.id.nameEditText);
         ageEditText = findViewById(R.id.ageEditText);
@@ -243,6 +244,7 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         baseballSpinner = findViewById(R.id.baseballSpinner);
     }
 
+    // Method that init layout array list.
     public void initLayoutArray(){
         layoutsArray.add(basketballLayout);
         layoutsArray.add(soccerLayout);
@@ -253,6 +255,7 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         layoutsArray.add(baseballLayout);
     }
 
+    // Method that init experience spinners.
     public void initSpinners(){
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.exp_array, android.R.layout.simple_spinner_item);
@@ -262,7 +265,8 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    public void setClickListeners(){
+    // Method that set the click listeners.
+    private void setClickListeners(){
         maleCheckBox.setOnClickListener(this);
         femaleCheckBox.setOnClickListener(this);
         uploadImageBtn.setOnClickListener(this);
@@ -272,12 +276,14 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    // Method that start the home page activity.
     public void startHomePageActivity(){
         Intent intent = new Intent(this, HomePageActivity.class);
         startActivity(intent);
         finish();
     }
 
+    // Method that give the option to choose image.
     private void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -294,6 +300,7 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    // Method that get the user information from the firebase.
     private void getUserInfo() {
         DocumentReference documentReference = db.collection("users").document(mAuth.getCurrentUser().getUid());
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -332,6 +339,7 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         });
     }
 
+    // Method that mark the sports checkbox according to user information.
     private void markCheckBox(Map<String, String> sportsMap){
         ArrayList<String> expArr = new ArrayList<>();
         String exp;
@@ -382,6 +390,7 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    // Method that get the user image from the firebase.
     private void getProfileImage(String id) throws IOException {
         String prefix = id;
         final File localFile = File.createTempFile(prefix, "");

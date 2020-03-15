@@ -1,19 +1,16 @@
 package com.example.tmates;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class User {
     private String uid, name, gender, city, description, email;
     private int age;
     private HashMap<String, String> sportsMap;
-    private ArrayList<String> chatRoomArrayList;
 
 
     // Constructor.
-    public User(String uid, String email, String name, String gender, String description, int age, String city, HashMap<String, String> sportsMap, ArrayList<String> chatRoomArrayList){
+    public User(String uid, String email, String name, String gender, String description, int age, String city, HashMap<String, String> sportsMap){
         this.uid = uid;
         this.email = email;
         this.name = name;
@@ -22,7 +19,6 @@ public class User {
         this.age = age;
         this.city = city;
         this.sportsMap = sportsMap;
-        this.chatRoomArrayList = chatRoomArrayList;
     }
 
     public User(){
@@ -94,12 +90,5 @@ public class User {
         this.sportsMap = sportsMap;
     }
 
-    public ArrayList<String> getChatRoomArrayList() {
-        return chatRoomArrayList;
-    }
-
-    public void setChatRoomArrayList(ArrayList<String> chatRoomArrayList) {
-        this.chatRoomArrayList = chatRoomArrayList;
-    }
 
 }

@@ -67,17 +67,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signupBtn.setOnClickListener(this);
     }
 
-
+    // Method that start the home page activity.
     public void startHomePageActivity(){
         Intent intent = new Intent(this, HomePageActivity.class);
         startActivity(intent);
     }
 
+    // Method that start the sign up activity.
     public void startSignUpActivity(){
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 
+    // Method that start the create profile activity.
     public void startCreateProfileActivity(){
         Intent intent = new Intent(this, CreateProfileActivity.class);
         startActivity(intent);
@@ -90,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
+    // Method that take the login input and sign in the user.
     private void signIn(final String email, final String password){
         mAuth.getCurrentUser().reload();
         if(checkFormValidation(email, password)) {
@@ -148,6 +151,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    // Method that check the login form.
     public boolean checkFormValidation(String email, String password){
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         if(!pattern.matcher(email).matches() && password.length() < 6){

@@ -53,6 +53,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    // Method that take sign up input and write it into firebase (and send verification email).
     private void signUp(String email, String password){
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -86,6 +87,7 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
+    // Method that check the sign up form.
     public boolean checkFormValidation(String password, String password2){
         if(password.compareTo(password2) != 0){
             Toast.makeText(SignUpActivity.this,"Passwords don't match.", Toast.LENGTH_LONG).show();

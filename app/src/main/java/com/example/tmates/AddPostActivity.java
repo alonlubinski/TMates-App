@@ -2,7 +2,6 @@ package com.example.tmates;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +16,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -41,12 +38,8 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        postTitleEditText = findViewById(R.id.postTitleEditText);
-        postDescriptionEditText = findViewById(R.id.postDescriptionEditText);
-        confirmPostBtn = findViewById(R.id.confirmPostBtn);
-        cancelPostBtn = findViewById(R.id.cancelPostBtn);
-        addPostProgressBar = findViewById(R.id.addPostProgressBar);
 
+        findById();
         confirmPostBtn.setOnClickListener(this);
         cancelPostBtn.setOnClickListener(this);
 
@@ -100,6 +93,7 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    // Method that check the add post form.
     public boolean checkFormValidation(EditText postTitleEditText, EditText postDescriptionEditText){
         if(postTitleEditText.getText().toString().trim().length() == 0){
             Toast.makeText(AddPostActivity.this,"Please enter post title.", Toast.LENGTH_LONG).show();
@@ -117,5 +111,14 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
         confirmPostBtn.setClickable(true);
         cancelPostBtn.setClickable(true);
         addPostProgressBar.setVisibility(View.GONE);
+    }
+
+    // Find views by id method.
+    private void findById() {
+        postTitleEditText = findViewById(R.id.postTitleEditText);
+        postDescriptionEditText = findViewById(R.id.postDescriptionEditText);
+        confirmPostBtn = findViewById(R.id.confirmPostBtn);
+        cancelPostBtn = findViewById(R.id.cancelPostBtn);
+        addPostProgressBar = findViewById(R.id.addPostProgressBar);
     }
 }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,13 +42,9 @@ public class LookForPartnerActivity extends AppCompatActivity implements View.On
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-
-
         noPostsYetStr = findViewById(R.id.noPostYetStr);
         addPostBtn = findViewById(R.id.addPostBtn);
         addPostBtn.setOnClickListener(this);
-
-        //getDataFromFireBase();
     }
 
     @Override
@@ -85,6 +80,7 @@ public class LookForPartnerActivity extends AppCompatActivity implements View.On
         startActivity(intent);
     }
 
+    // Method that init the recycler view.
     public void initRecyclerView(){
         recyclerView = findViewById(R.id.postsRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -93,7 +89,8 @@ public class LookForPartnerActivity extends AppCompatActivity implements View.On
         mAdapter = new MyAdapter(postsList);
         recyclerView.setAdapter(mAdapter);
     }
-//
+
+    // Method the get information from the firebase.
     public void getDataFromFireBase(){
         final CollectionReference collectionReference = db.collection("posts");
         collectionReference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

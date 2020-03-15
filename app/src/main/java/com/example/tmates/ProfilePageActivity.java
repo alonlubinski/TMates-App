@@ -51,14 +51,7 @@ public class ProfilePageActivity extends AppCompatActivity implements View.OnCli
         db = FirebaseFirestore.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
-        nameText = findViewById(R.id.userName);
-        ageText = findViewById(R.id.userAgeStr);
-        genderText = findViewById(R.id.userGenderStr);
-        cityText = findViewById(R.id.userCityStr);
-        userDescriptionText = findViewById(R.id.userDescription);
-        sportTable = findViewById(R.id.sportsTable);
-        profileUserImage = findViewById(R.id.profileUserImage);
-        editProfileButton = findViewById(R.id.editProfileBtn);
+        findById();
 
         editProfileButton.setOnClickListener(this);
 
@@ -73,6 +66,12 @@ public class ProfilePageActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onResume() {
         super.onResume();
+        initTableLayout();
+        updateUI();
+    }
+
+    // Method that init the sports table layout.
+    private void initTableLayout(){
         sportTable.removeAllViews();
         TableRow tableRow = new TableRow(sportTable.getContext());
         TextView sport = new TextView(tableRow.getContext());
@@ -83,7 +82,6 @@ public class ProfilePageActivity extends AppCompatActivity implements View.OnCli
         sport.setTextColor(getResources().getColor(R.color.black));
         sport.setGravity(Gravity.CENTER);
         sport.setTypeface(Typeface.DEFAULT_BOLD);
-
         TextView exp = new TextView(getApplicationContext());
         exp.setText("Experience");
         exp.setPadding(30, 30, 30, 30);
@@ -96,10 +94,9 @@ public class ProfilePageActivity extends AppCompatActivity implements View.OnCli
         tableRow.addView(exp);
         tableRow.setBackground(getResources().getDrawable(R.drawable.tablerow_shape));
         sportTable.addView(tableRow);
-
-        updateUI();
     }
 
+    // Method that get the user information from the firebase and update the ui.
     private void updateUI() {
         DocumentReference documentReference = db.collection("users").document(userId);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -149,6 +146,7 @@ public class ProfilePageActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
+    // Method that get the user image from the firebase.
     private void getProfileImage(String id) throws IOException {
         String prefix = id;
         final File localFile = File.createTempFile(prefix, "");
@@ -179,9 +177,22 @@ public class ProfilePageActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    // Method that start the edit profile page activity.
     public void startEditProfileActivity(){
         Intent intent = new Intent(ProfilePageActivity.this, CreateProfileActivity.class);
         intent.putExtra("edit", true);
         startActivity(intent);
+    }
+
+    // Find views by id method.
+    private void findById() {
+        nameText = findViewById(R.id.userName);
+        ageText = findViewById(R.id.userAgeStr);
+        genderText = findViewById(R.id.userGenderStr);
+        cityText = findViewById(R.id.userCityStr);
+        userDescriptionText = findViewById(R.id.userDescription);
+        sportTable = findViewById(R.id.sportsTable);
+        profileUserImage = findViewById(R.id.profileUserImage);
+        editProfileButton = findViewById(R.id.editProfileBtn);
     }
 }

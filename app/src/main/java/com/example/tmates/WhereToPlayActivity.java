@@ -36,7 +36,6 @@ public class WhereToPlayActivity extends FragmentActivity implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         LatLng israel = new LatLng(31.4117257, 35.0818155);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(israel, 8));
 

@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //  Splash screen - animate the logo.
     public void animateLogo(ImageView view){
         ObjectAnimator logoAnimate, logoAnimate1, logoAnimate2;
         logoAnimate = ObjectAnimator.ofFloat(view, "scaleX", 0f, 1f);
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         logoAnimate2.start();
     }
 
+    // Method that start the login activity.
     public void startLoginActivity(){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

@@ -50,6 +50,7 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
         cancelMessageBtn.setOnClickListener(this);
     }
 
+    // Find views by id method.
     public void findById(){
         messageTitleEditText = findViewById(R.id.messageTitleEditText);
         messageDescriptionEditText = findViewById(R.id.messageDescriptionEditText);
@@ -60,6 +61,7 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
         sendMessageProgressBar = findViewById(R.id.sendMessageProgressBar);
     }
 
+    // Method that check the send message form.
     public boolean checkFormValidation(EditText messageTitleEditText, EditText messageDescriptionEditText, EditText messageEmailEditText, EditText messagePhoneEditText){
         if(messageTitleEditText.getText().toString().trim().length() == 0){
             Toast.makeText(SendMessageActivity.this,"Please enter message title.", Toast.LENGTH_LONG).show();
@@ -80,6 +82,7 @@ public class SendMessageActivity extends AppCompatActivity implements View.OnCli
         return true;
     }
 
+    // Method that get the current user information from the firebase.
     public void getCurUser(String id){
         DocumentReference documentReference = db.collection("users").document(id);
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
