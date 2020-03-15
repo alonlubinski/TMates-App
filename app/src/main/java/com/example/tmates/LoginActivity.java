@@ -91,51 +91,60 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void signIn(final String email, final String password){
+        mAuth.getCurrentUser().reload();
         if(checkFormValidation(email, password)) {
-            progressBar.setVisibility(View.VISIBLE);
-            loginBtn.setClickable(false);
-            signupBtn.setClickable(false);
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                System.out.println("Logged in!");
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                if(saveLoginCheckBox.isChecked()){
-                                    editor.putBoolean("saveLogin", true);
-                                    editor.putString("email", email);
-                                    editor.putString("password", password);
-                                    editor.commit();
-                                } else {
-                                    editor.clear();
-                                    editor.commit();
-                                }
-                                DocumentReference documentReference = db.collection("users").document(mAuth.getCurrentUser().getUid());
-                                documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        DocumentSnapshot documentSnapshot = task.getResult();
-                                        if(documentSnapshot.exists()){
-                                            startHomePageActivity();
-                                        } else {
-                                            startCreateProfileActivity();
-                                        }
+            if(mAuth.getCurrentUser().isEmailVerified()){
+                progressBar.setVisibility(View.VISIBLE);
+                loginBtn.setClickable(false);
+                signupBtn.setClickable(false);
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    System.out.println("Logged in!");
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    if(saveLoginCheckBox.isChecked()){
+                                        editor.putBoolean("saveLogin", true);
+                                        editor.putString("email", email);
+                                        editor.putString("password", password);
+                                        editor.commit();
+                                    } else {
+                                        editor.clear();
+                                        editor.commit();
                                     }
-                                });
+                                    DocumentReference documentReference = db.collection("users").document(mAuth.getCurrentUser().getUid());
+                                    documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            DocumentSnapshot documentSnapshot = task.getResult();
+                                            if(documentSnapshot.exists()){
+                                                startHomePageActivity();
+                                            } else {
+                                                startCreateProfileActivity();
+                                            }
+                                        }
+                                    });
 
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                progressBar.setVisibility(View.INVISIBLE);
-                                loginBtn.setClickable(true);
-                                signupBtn.setClickable(true);
-                                Toast.makeText(LoginActivity.this,"Login failed!", Toast.LENGTH_LONG).show();
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    progressBar.setVisibility(View.INVISIBLE);
+                                    loginBtn.setClickable(true);
+                                    signupBtn.setClickable(true);
+                                    Toast.makeText(LoginActivity.this,"Login failed!", Toast.LENGTH_LONG).show();
 
+                                }
                             }
-                        }
-                    });
+                        });
+            } else {
+                Toast.makeText(LoginActivity.this,"Please verify your email.", Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.INVISIBLE);
+                loginBtn.setClickable(true);
+                signupBtn.setClickable(true);
+            }
+
         }
     }
 

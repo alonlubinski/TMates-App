@@ -51,7 +51,7 @@
     <string name="phonenum_str">Phone Number:</string>
     <string name="entermessageemail_str">Enter your email</string>
     <string name="entermessagephone_str">Enter your phone number</string>
-    <string name="fill_str">Fill at least one of the options below.</string>
+    <string name="fill_str">Fill at least one of the options down below.</string>
     <string name="messages_str">Messages</string>
     <string name="nomessages_str">No messages yet...</string>
     <string name="delete_str">Delete</string>

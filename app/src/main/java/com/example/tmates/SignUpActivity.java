@@ -63,7 +63,19 @@ public class SignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             //FirebaseUser user = mAuth.getCurrentUser();
-                            finish();
+                            mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(SignUpActivity.this, "Email sent.", Toast.LENGTH_LONG).show();
+                                        finish();
+                                    } else {
+                                        Toast.makeText(SignUpActivity.this,task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                        progressBar.setVisibility(View.GONE);
+                                        signupBtn.setClickable(true);
+                                    }
+                                }
+                            });
                         } else {
                             // If sign in fails, display a message to the user.
                             progressBar.setVisibility(View.GONE);
