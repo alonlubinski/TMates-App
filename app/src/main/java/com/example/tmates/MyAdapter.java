@@ -66,12 +66,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         }
 
+        // Method that start the profile page activity.
         public void startProfilePageActivity(){
             Intent intent = new Intent(context, ProfilePageActivity.class);
             intent.putExtra("otherUserId", this.userAuthorId);
             context.startActivity(intent);
         }
 
+        // Method that start the send message page activity.
         public void startSendMessagePageActivity(){
             Intent intent = new Intent(context, SendMessageActivity.class);
             intent.putExtra("otherUserId", this.userAuthorId);
@@ -120,6 +122,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return mDataset.size();
     }
 
+    // Method that get the user's profile image from firebase.
     private void getProfileImage(String id, final MyViewHolder holder, final ImageView imageView) throws IOException {
         String prefix = id;
         final File localFile = File.createTempFile(prefix, "");

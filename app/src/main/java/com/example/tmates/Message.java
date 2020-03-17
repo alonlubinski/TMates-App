@@ -1,7 +1,6 @@
 package com.example.tmates;
 
 import android.util.Patterns;
-
 import java.util.regex.Pattern;
 
 public class Message implements Comparable<Message>{

@@ -173,6 +173,7 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    // Not in used yet.
     private void updatePostsDB(final String authorId, final User user) {
         CollectionReference postsRef = db.collection("posts");
         postsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -402,7 +403,6 @@ public class CreateProfileActivity extends AppCompatActivity implements View.OnC
                         // Successfully downloaded data to local file
                         Glide.with(getApplicationContext()).load(localFile).into(userImage);
                         filePath = Uri.parse(localFile.getPath());
-                       // Picasso.with(getApplicationContext()).load(localFile).into(userImage);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override

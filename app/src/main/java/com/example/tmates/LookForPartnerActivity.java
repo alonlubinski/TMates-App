@@ -20,7 +20,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import javax.annotation.Nullable;
 
 public class LookForPartnerActivity extends AppCompatActivity implements View.OnClickListener{
@@ -75,6 +74,8 @@ public class LookForPartnerActivity extends AppCompatActivity implements View.On
         });
     }
 
+
+    // Method that start the add post activity.
     public void startAddPostActivity(){
         Intent intent = new Intent(this, AddPostActivity.class);
         startActivity(intent);

@@ -57,17 +57,14 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         @Override
         public void onClick(View view) {
-            switch (view.getId()){
+            switch (view.getId()) {
                 case R.id.messageCardProfileBtn:
                     startProfilePageActivity();
-                    break;
-
-                case R.id.messageCardDeleteBtn:
-
                     break;
             }
         }
 
+        // Method that start the profile page activity.
         public void startProfilePageActivity(){
             Intent intent = new Intent(context, ProfilePageActivity.class);
             intent.putExtra("otherUserId", this.userAuthorId);
@@ -130,6 +127,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         return mDataset.size();
     }
 
+    // Method that get the user's profile image from firebase.
     private void getProfileImage(String id, final MessageListAdapter.MyViewHolder holder, final ImageView imageView) throws IOException {
         String prefix = id;
         final File localFile = File.createTempFile(prefix, "");
@@ -150,6 +148,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         });
     }
 
+    // Method that remove message from the firebase.
     private void removeMessageFromFireBase(String messageId, final MessageListAdapter.MyViewHolder holder){
         db.collection("messages").document(messageId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
